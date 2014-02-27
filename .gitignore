@@ -1,0 +1,22 @@
+# Ignore core files
+
+/bootstrap/compiled.php
+/vendor
+composer.phar
+composer.lock
+.env.local.php
+.env.php
+
+#Don't ignore
+!.htaccess
+!.gitignore
+!/sites/
+!Vagrantfile
+!manifests
+
+# Ignore sass cache files, mac hidden files, and swap files
+.DS_Store
+Thumbs.db
+.sass-cache
+.sass-cache/*
+*.swp
