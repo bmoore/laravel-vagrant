@@ -1,5 +1,4 @@
 # Ignore core files
-
 /bootstrap/compiled.php
 /vendor
 composer.phar
@@ -7,12 +6,13 @@ composer.lock
 .env.local.php
 .env.php
 
-#Don't ignore
+#Vagrant GIT Apache
 !.htaccess
 !.gitignore
 !/sites/
 !Vagrantfile
 !manifests
+.vagrant
 
 # Ignore sass cache files, mac hidden files, and swap files
 .DS_Store
