@@ -49,16 +49,20 @@ class packages {
 class configure {
     exec {
         "clear-apache-conf":
-            command => '/usr/bin/sudo rm /etc/apache2/sites-enabled/000-default',
-            onlyif => '/bin/ls /etc/apache2/sites-enabled/000-default';
+            command => '/usr/bin/sudo rm /etc/apache2/sites-enabled/000-default.conf',
+            onlyif => '/bin/ls /etc/apache2/sites-enabled/000-default.conf';
 
         "link-apache-conf":
             command => '/usr/bin/sudo ln -s /var/www/manifests/vagrant.conf /etc/apache2/sites-enabled/vagrant.conf',
             unless => '/bin/ls /etc/apache2/sites-enabled/vagrant.conf';
 
-        "clear-webroot":
+        "clear-index":
             command => '/bin/rm /var/www/index.html',
             onlyif => '/bin/ls /var/www/index.html';
+
+        "clear-html":
+            command => '/bin/rm -r /var/www/html',
+            onlyif => '/bin/ls /var/www/html';
 
         "apache-rewrite":
             command => '/usr/bin/sudo a2enmod rewrite';
