@@ -12,6 +12,7 @@ composer.lock
 !/sites/
 !Vagrantfile
 !manifests
+manifests/composer.json
 .vagrant
 
 # Ignore sass cache files, mac hidden files, and swap files

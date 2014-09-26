@@ -3,7 +3,8 @@ stage {
     'users':       before => Stage['folders'];
     'folders':     before => Stage['updates'];
     'updates':     before => Stage['packages'];
-    'packages':    before => Stage['configure'];
+    'packages':    before => Stage['composer'];
+    'composer':    before => Stage['configure'];
     'configure':   before => Stage['services'];
     'services':    before => Stage['main'];
 }
@@ -33,6 +34,7 @@ class updates {
 class packages {
     package {[
             "git",
+            "curl",
             "apache2",
             "mysql-client",
             "php5",
@@ -43,6 +45,29 @@ class packages {
             "php5-cli"
             ]:
         ensure => "present",
+    }
+}
+
+class composer {
+    exec {
+        "get-composer":
+            command => '/usr/bin/sudo curl -sS https://getcomposer.org/installer | php',
+            unless => '/usr/bin/which composer';
+
+        "set-composer":
+            command => '/usr/bin/sudo mv composer.phar /usr/local/bin/composer',
+            unless => '/usr/bin/which composer',
+            require => Exec['get-composer'];
+
+        "composer-dir":
+            command => '/bin/mkdir -p ~/.composer',
+            unless => '/bin/ls ~/.composer';
+
+        "github-api-conf":
+            command => '/usr/bin/sudo cp /var/www/manifests/composer.json ~/.composer/config.json',
+            onlyif => '/bin/ls /var/www/manifests/composer.json',
+            unless => '/bin/ls ~/.composer/config.json',
+            require => Exec['composer-dir'];
     }
 }
 
@@ -66,6 +91,10 @@ class configure {
 
         "apache-rewrite":
             command => '/usr/bin/sudo a2enmod rewrite';
+
+        "install-laravel":
+            command => '/usr/local/bin/composer create-project laravel/laravel --prefer-dist',
+            unless => '/bin/ls /var/www/index.php';
     }
 }
 
