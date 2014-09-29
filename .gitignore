@@ -5,6 +5,7 @@ composer.phar
 composer.lock
 .env.local.php
 .env.php
+laravel
 
 #Vagrant GIT Apache
 !.htaccess

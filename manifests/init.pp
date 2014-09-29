@@ -5,7 +5,8 @@ stage {
     'updates':     before => Stage['packages'];
     'packages':    before => Stage['composer'];
     'composer':    before => Stage['configure'];
-    'configure':   before => Stage['services'];
+    'configure':   before => Stage['laravel'];
+    'laravel':     before => Stage['services'];
     'services':    before => Stage['main'];
 }
 
@@ -92,9 +93,17 @@ class configure {
         "apache-rewrite":
             command => '/usr/bin/sudo a2enmod rewrite';
 
+        "enable-php-mcrypt":
+            command => '/usr/bin/sudo php5enmod mcrypt';
+    }
+}
+
+class laravel {
+    exec {
         "install-laravel":
-            command => '/usr/local/bin/composer create-project laravel/laravel --prefer-dist',
-            unless => '/bin/ls /var/www/index.php';
+            command => '/usr/bin/sudo composer create-project laravel/laravel laravel --prefer-dist',
+            cwd => '/var/www',
+            unless => '/bin/ls /var/www/laravel';
     }
 }
 
@@ -110,6 +119,8 @@ class {
     folders:     stage => "folders";
     updates:     stage => "updates";
     packages:    stage => "packages";
+    composer:    stage => "composer";
     configure:   stage => "configure";
+    laravel:     stage => "laravel";
     services:    stage => "services";
 }
